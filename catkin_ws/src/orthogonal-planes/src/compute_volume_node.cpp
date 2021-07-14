@@ -74,7 +74,7 @@ public:
     pub5_ = nh_.advertise<sensor_msgs::PointCloud2>("/Planes_wrong_angle", 1);
 
     std::string Box_name;
-      
+    
     ros::param::get("/output_file", Box_name);
     
     std::cout<<Box_name.c_str()<<'\n';
@@ -90,6 +90,26 @@ public:
     else{
       std::cout<<"false"<<'\n';
     }
+
+    std::string Out_score;
+      
+
+    ros::param::get("/output_file_score", Out_score);
+    
+    std::cout<<Out_score.c_str()<<'\n';
+    ROS_INFO("Got param: %s", Out_score.c_str());
+
+
+    if (nh_.getParam("output_file_score", Out_score))
+    {
+    input_file_2=input_file_2+Out_score.c_str()+".csv";
+    ROS_INFO("Got param: %s", Out_score.c_str());
+    std::cout<<"true"<<'\n';
+    }
+    else{
+      std::cout<<"false"<<'\n';
+    }
+
 
     sub_ = nh_.subscribe("/pf_out", 1, &ComputeVolumeNode::cloudCallback, this);
 
@@ -1486,6 +1506,8 @@ void compute_angle( pcl::PointCloud<pcl::PointXYZ>::Ptr all_planes[4],
                    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_wrong_angle)
   {
 
+     std::ofstream log_score(input_file_2, std::ios_base::app | std::ios_base::out);
+
     pcl::PointCloud<pcl::PointXYZ> cloud_proximitate_x_min;
     cloud_proximitate_x_min.width = 0;
     cloud_proximitate_x_min.height = 1;
@@ -1910,6 +1932,8 @@ void compute_angle( pcl::PointCloud<pcl::PointXYZ>::Ptr all_planes[4],
            score_angle(p,2,cos_angle_u2,angle);
 
     std::cout<<"Score 2:"<<score2<<'\n';
+
+    log_score<<cloud->size()<<";"<<score1<<";"<<score2<<";"<<'\n';
   }
 
   void
@@ -1988,7 +2012,9 @@ void compute_angle( pcl::PointCloud<pcl::PointXYZ>::Ptr all_planes[4],
 
     //std::ofstream log("/home/alex-pop/Desktop/Doctorat/Side_projects/Volume_Box_2/catkin_ws/Volumes_node.txt", std::ios_base::app | std::ios_base::out);
     std::cout<<input_file<<'\n';
+    std::cout<<input_file_2<<'\n';
     std::ofstream log(input_file, std::ios_base::app | std::ios_base::out);
+   
     
     //std::ofstream log("/media/rambo/ssd2/Alex_data/Volume_Box_2/catkin_ws/Volume_PCL_1_train.csv", std::ios_base::app | std::ios_base::out);
 
