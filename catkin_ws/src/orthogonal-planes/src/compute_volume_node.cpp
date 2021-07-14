@@ -32,6 +32,7 @@
 
 
 std::string input_file="/media/rambo/ssd2/Alex_data/Volume_Rambo/catkin_ws/Volume_PCL_";
+std::string input_file_2="/media/rambo/ssd2/Alex_data/Volume_Rambo/catkin_ws/Score";
 
 class ComputeVolumeNode
 {
